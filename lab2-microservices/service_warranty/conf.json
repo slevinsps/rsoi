@@ -1,0 +1,28 @@
+{
+	"service_store": {
+		"host": "http://localhost",
+		"port": "8480",
+		"url" : "https://store-service-app-bmstu.herokuapp.com"
+	},
+	"service_orders": {
+		"host": "http://localhost",
+		"port": "8380",
+		"url" : "https://order-service-app-bmstu.herokuapp.com"
+	},
+	"service_warranty": {
+		"host": "http://localhost",
+		"port": "8180",
+		"url" : "https://warranty-service-app-bmstu.herokuapp.com"
+	},
+	"service_warehouse": {
+		"host": "http://localhost",
+		"port": "8280",
+		"url" : "https://warehouse-service-app-bmstu.herokuapp.com"
+	},
+	"dataBase": {
+		"driverName": "postgres",
+		"url": "DATABASE_URL",
+		"maxOpenConns": 100,
+		"localDataBaseUrl": "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
+	}
+}

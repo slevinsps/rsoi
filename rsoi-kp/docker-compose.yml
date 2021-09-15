@@ -1,0 +1,212 @@
+version: "3.7"
+services:
+  postgres:
+    build:
+      dockerfile: Dockerfile
+      context: ./postgres/
+    container_name: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 5s
+        timeout: 2s
+        retries: 3
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis
+    restart: on-failure
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+    volumes: 
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data1:/data
+    healthcheck:
+        test: ["CMD", "redis-cli","ping"]
+        interval: 5s
+        timeout: 2s
+        retries: 3
+
+  redis_gateway:
+    image: "redis:alpine"
+    container_name: redis_gateway
+    restart: on-failure
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6376:6376
+    volumes: 
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data2:/data
+    healthcheck:
+        test: ["CMD", "redis-cli","ping"]
+        interval: 5s
+        timeout: 2s
+        retries: 3
+
+
+  redis_generator:
+    image: "redis:alpine"
+    container_name: redis_generator
+    restart: on-failure
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6375:6375
+    volumes: 
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data3:/data
+    healthcheck:
+        test: ["CMD", "redis-cli","ping"]
+        interval: 5s
+        timeout: 2s
+        retries: 3
+        
+
+  service_session:
+    build:
+        context: ./services/service_session
+        dockerfile: Dockerfile
+    ports:
+        - 8380-8382:8380
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:
+          condition: service_healthy
+    command: 
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_session"
+
+  service_monitor:
+    build:
+        context: ./services/service_monitor
+        dockerfile: Dockerfile
+    ports:
+        - 8480-8482:8480
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:
+          condition: service_healthy
+    command: 
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_monitor"
+  
+  service_equipment:
+    build:
+        context: ./services/service_equipment
+        dockerfile: Dockerfile
+    ports:
+        - 8580-8582:8580
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:  
+          condition: service_healthy
+    command: 
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_equipment"
+
+  service_documentation:
+    build:
+        context: ./services/service_documentation
+        dockerfile: Dockerfile
+    ports:
+        - 8680-8682:8680
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    volumes:
+    - ./services/service_documentation/uploads:/service/uploads
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:
+          condition: service_healthy
+    command:
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_documentation"
+
+  
+  service_generator:
+    build:
+        context: ./services/service_generator
+        dockerfile: Dockerfile
+    ports:
+        - 8880-8882:8880
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:  
+          condition: service_healthy
+        redis_generator:
+          condition: service_healthy
+    command:
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_generator"
+    # healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:8880"]
+    #     interval: 5s
+    #     timeout: 2s
+    #     retries: 3
+  
+
+  service_gateway:
+    build:
+        context: ./services/service_gateway
+        dockerfile: Dockerfile
+    ports:
+        - 8980-8982:8980
+    deploy:
+      mode: replicated
+      replicas: 3
+      endpoint_mode: dnsrr
+    depends_on: 
+        # postgres:
+        #   condition: service_healthy
+        redis:  
+          condition: service_healthy
+    command:
+      /bin/sh -c "./wait-for-it.sh postgres:5432 && ./service_gateway"
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend/
+      network: host
+    depends_on:
+      - "service_gateway"
+      - "service_session"
+    ports:
+       - "10889:80"  
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: dnsrr
+        
+volumes:
+  db-data:

@@ -1,0 +1,22 @@
+{
+	"service_monitor": {
+		"host": "localhost",
+		"port": "8480",
+		"url" : "https://store-service-app-bmstu.herokuapp.com"
+	},
+	"service_session": {
+		"host": "localhost",
+		"port": "8380",
+		"url" : "https://order-service-app-bmstu.herokuapp.com"
+	},
+	"dataBase": {
+		"driverName": "postgres",
+		"url": "DATABASE_URL",
+		"maxOpenConns": 100,
+		"localDataBaseUrl": "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
+	},
+	"redis" : {
+		"host": "redis",
+		"port": "6379"
+	}
+}

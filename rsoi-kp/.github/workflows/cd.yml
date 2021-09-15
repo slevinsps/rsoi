@@ -1,0 +1,64 @@
+name: CD
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy app
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: 46.101.169.83
+          key: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
+            NhAAAAAwEAAQAAAYEAtum3T6RzMDafZgTUilcxz8M6aoyJSwIMSxJsspx+kpuuvBJzlnrJ
+            dU3tpDcjR5AD5RtoPYB64dMsFVPYPvuqqs0jzC/ZxCVIc7Iikv9DNz6mbf+Xlk2b598brE
+            qkN9kzqff+Cfu17gKP5nwcSPKXJJ+G24z5v96C/cW//J1gVYa9nHSVGBh6+Bio1PjhsQ1l
+            DMgh3LbDqn/4vQjWdKyrbCCOv+kjYN3a/n+1wsnCcOs+lqLloIPtdtjbtmMpXRI6tpqjoA
+            FtaHDi/Q92efqlBgASlfTf8M/8Owny0NqncfGUUUWURQ6vQCfsfz0TkoE16TweKWhMKis+
+            bHR3DAd6McKH4JpLnTBQZpedgTP7SrgGyRji8Ce/HC0IL8vqUyaXL8tg94WS3p0JKs87ld
+            BQiz8OZMwKzEj0NGvuStO0UZWVLtTGd9aGwdpL5PzH4yo99GBKnMu7ky5PoxcwjNea20C9
+            b/3HJfock+QzNfQqbXigvoyOqIJmaARRe/Sm8SYLAAAFiNGWFFvRlhRbAAAAB3NzaC1yc2
+            EAAAGBALbpt0+kczA2n2YE1IpXMc/DOmqMiUsCDEsSbLKcfpKbrrwSc5Z6yXVN7aQ3I0eQ
+            A+UbaD2AeuHTLBVT2D77qqrNI8wv2cQlSHOyIpL/Qzc+pm3/l5ZNm+ffG6xKpDfZM6n3/g
+            n7te4Cj+Z8HEjylySfhtuM+b/egv3Fv/ydYFWGvZx0lRgYevgYqNT44bENZQzIIdy2w6p/
+            +L0I1nSsq2wgjr/pI2Dd2v5/tcLJwnDrPpai5aCD7XbY27ZjKV0SOraao6ABbWhw4v0Pdn
+            n6pQYAEpX03/DP/DsJ8tDap3HxlFFFlEUOr0An7H89E5KBNek8HiloTCorPmx0dwwHejHC
+            h+CaS50wUGaXnYEz+0q4BskY4vAnvxwtCC/L6lMmly/LYPeFkt6dCSrPO5XQUIs/DmTMCs
+            xI9DRr7krTtFGVlS7UxnfWhsHaS+T8x+MqPfRgSpzLu5MuT6MXMIzXmttAvW/9xyX6HJPk
+            MzX0Km14oL6MjqiCZmgEUXv0pvEmCwAAAAMBAAEAAAGBALR+9xxJPD3EeRD0DUQifQ33Kc
+            sAuW5iK/1cxhSO5zwHEquWTaedrPTrnGii3FZ+38kSfY/LG/eCKgs1vLuSHr0DR6LzSSIM
+            ZG1+yC1kZVC7qwH66Pwxw3pRKH6g/WH7HMdJ5860K7gdoSChMkwtz0YdgbdfawiSK5L+s9
+            A1AF4FY1BjnsizR41Q0DGxEw1jGWc+imPBml3CgJMRiIaD6Xj+u77W8clhw/vFzHfWHuDM
+            0utU/eGirg7MOivFuIiWNdzu51SF8RfXoH+JrRfpcoXSyDO662wBtlHocC/PO1QBVQC0fs
+            FVshxyXfwpmtIEttuiIpX1MUwHg+5mFc7EYwOHMz42sgkslKn84SE109w9BPfYAU0MhQNo
+            fA1wZ0b5Gsohr3LHhxpjhIOo8Avu5HDSFJmVb4kDi1xpdHnV4GcDYkJ2xPbJBnL10OgOc+
+            FWPN5gp2yBRo6pJxCyCtcTqzMRiCJ1eQycSE23Zv3nxkIYamnpH5Z82I2uouNtz8378QAA
+            AMBkh3Xcathikf+8eS8IPoA2ilNuSvzwcRgmtwXZJVeFQJjGNXSlAnyFU40wxPaIptJYlN
+            P/FT4rfShs7uPKHl8+6kLy8eaWQAx4RICL+P3GrTIExNpziQuLlynOpcJhWMV1n6B48DIv
+            to3j4zNHCyX8WtKLDj0IFi3aNuCrfTFieRbM2f9WCzQBIxpLuiAfihfT8nJde+e4oanQ8l
+            i8M2zIrD/0Ngl1kav3+Z3A9KG8Ptu8bvMQYsxovoNgpnWadP8AAADBANjaoCvKz9baBWW6
+            VcTW45Njv4K+T2AhGoj20I0JTIQXnNU+oYhUJbe5ZMnp9KzWIKgi38aCB/b9KilSQPxSna
+            170PPFIaFxkBQ5qEso3o9MGFch9PsfK6EfGgq5D+2VnZ73rop6R1+9dV02giZOTIaT0x8b
+            QplGTRHYIzSjSh59sjdw1ECpVJEw1gRFiF0La1gQlHe9JyeyAqoIO3g61SvzUL6W+AcL8c
+            2LzoXuBThvKcMQkFnJ/AGg02BABT7qSQAAAMEA1+6Wj9m6Fy2HU7Bkc3NBo3wpX8w3EVqD
+            S3u6lkB5QBEayEIG5gWcwkBreWUIcCh+IBnA48Pp3r31dSIjnINwvzeoRuyjC+/YXgvgwN
+            QYxPdNKB9zvAALl/oo4Z12BgnQGn5ilc4LqEDGUh0IysZ16cvpRfWnzBPFmpJtlffQt5nU
+            w43EF8cdBywBG0jJWQZUphU0qF+WEiComMyZU3ahiGlIn4jUkUAcvvGt6ygvDnJmCOTD0n
+            46wN4FjUq6oK2zAAAAD3Jvb3RAbW9uaXRvcmluZwECAw==
+            -----END OPENSSH PRIVATE KEY-----
+          username: root # User of the server you want to ssh into
+     
+          script: |
+            cd rsoi-kp-slevinsps
+            git pull
+            echo 'Success' 
+            sudo docker-compose stop
+            sudo docker-compose rm -f redis
+            sudo docker-compose rm -f redis_gateway
+            sudo docker-compose rm -f redis_generator
+            sudo docker-compose --compatibility up --build -d
+            sleep 5

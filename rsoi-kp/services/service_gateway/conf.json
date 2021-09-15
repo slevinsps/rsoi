@@ -1,0 +1,47 @@
+{
+	"service_session": {
+		"host": "localhost",
+		"port": "8380",
+		"url" : "http://service_session:8380/api/v1/session"
+	},
+	"service_monitor": {
+		"host": "localhost",
+		"port": "8480",
+		"url" : "http://service_monitor:8480/api/v1/monitor"
+	},
+	"service_equipment": {
+		"host": "localhost",
+		"port": "8580",
+		"url" : "http://service_equipment:8580/api/v1/equipment"
+	},
+	"service_documentation": {
+		"host": "localhost",
+		"port": "8680",
+		"url" : "http://service_documentation:8680/api/v1/documentation"
+	},
+	"service_generator": {
+		"host": "localhost",
+		"port": "8880",
+		"url" : "http://service_generator:8880/api/v1/generator"
+	},
+	"service_gateway": {
+		"host": "localhost",
+		"port": "8980",
+		"url" : "http://service_gateway:8980"
+	},
+	"dataBase": {
+		"driverName": "postgres",
+		"url": "DATABASE_URL",
+		"maxOpenConns": 100,
+		"localDataBaseUrl": "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
+	},
+	"redis" : {
+		"host": "redis",
+		"port": "6379"
+	},
+	"redis_gateway" : {
+		"host": "redis_gateway",
+		"port": "6379"
+	}
+	
+}

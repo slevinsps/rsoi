@@ -1,0 +1,22 @@
+{
+	"service_generator": {
+		"host": "localhost",
+		"port": "8880",
+		"url" : "http://service_generator:8880"
+	},
+	"service_gateway": {
+		"host": "localhost",
+		"port": "8980",
+		"url" : "http://service_gateway:8980/api/v1/app"
+	},
+	"dataBase": {
+		"driverName": "postgres",
+		"url": "DATABASE_URL",
+		"maxOpenConns": 100,
+		"localDataBaseUrl": "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
+	},
+	"redis_generator" : {
+		"host": "redis_generator",
+		"port": "6379"
+	}
+}

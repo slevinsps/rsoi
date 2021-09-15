@@ -1,0 +1,67 @@
+version: "3"
+services:
+  postgres:
+    image: library/postgres:13
+    container_name: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
+
+  service_store:
+    build:
+        context: ./service_store
+        dockerfile: Dockerfile
+    ports:
+        - 8480:8480
+    depends_on: 
+        - postgres
+        - service_warranty
+        - service_warehouse
+        - service_orders
+    command: /bin/sh -c "./wait-for-it.sh postgres:5432 && ./wait-for-it.sh service_warranty:8180 && ./wait-for-it.sh service_warehouse:8280 && ./wait-for-it.sh service_orders:8380 && ./bin/service_store"
+
+  service_orders:
+    build:
+        context: .
+        dockerfile: ./service_orders/Dockerfile
+    ports:
+        - 8380:8380
+    depends_on: 
+        - postgres
+        - service_warranty
+        - service_warehouse
+    command: /bin/sh -c "./wait-for-it.sh postgres:5432 && ./wait-for-it.sh service_warranty:8180 && ./wait-for-it.sh service_warehouse:8280 && ./bin/service_orders"
+
+  service_warranty:
+    build:
+        context: .
+        dockerfile: ./service_warranty/Dockerfile
+    ports:
+        - 8180:8180
+    depends_on: 
+        - postgres
+    command: /bin/sh -c "./wait-for-it.sh postgres:5432 && ./bin/service_warranty"
+  
+  service_warehouse:
+    build:
+        context: .
+        dockerfile: ./service_warehouse/Dockerfile
+    ports:
+        - 8280:8280
+    depends_on: 
+        - postgres
+        - service_warranty
+    command: /bin/sh -c "./wait-for-it.sh postgres:5432 && ./wait-for-it.sh service_warranty:8180 && ./bin/service_warehouse"
+
+
+
+
+volumes:
+  db-data:
